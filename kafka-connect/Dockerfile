@@ -12,9 +12,7 @@ RUN apt-get update \
  && wget -P ${HOME}/libs/s3-aiven https://github.com/Aiven-Open/s3-connector-for-apache-kafka/releases/download/v${S3_AIVEN_CONNECTOR_VERSION}/s3-connector-for-apache-kafka-${S3_AIVEN_CONNECTOR_VERSION}.zip \
  && wget -P ${HOME}/libs/postgres-dbzm https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/${DEBEZIUM_POSTGRES_CONNECTOR_VERSION}.Final/debezium-connector-postgres-${DEBEZIUM_POSTGRES_CONNECTOR_VERSION}.Final-plugin.tar.gz
 
-COPY scripts/connect-entrypoint.sh ${HOME}
-COPY scripts/standalone.sh ${HOME}
-
+COPY scripts/ ${HOME}/scripts/
 
 EXPOSE 8083
 
@@ -22,12 +20,11 @@ EXPOSE 8083
 RUN chown -R kafka:kafka $HOME/ && \
     chown -R kafka:kafka /tmp
 
-RUN chmod +x connect-entrypoint.sh
-RUN chmod +x standalone.sh
+RUN chmod +x ${HOME}/scripts/*.sh
 
 # Set the entrypoint to the connect-entrypoint.sh script
 # ENTRYPOINT [ "./connect-entrypoint.sh" ]
-ENTRYPOINT [ "./connect-entrypoint.sh" ]
+ENTRYPOINT [ "/opt/kafka/scripts/connect-entrypoint.sh" ]
 
 USER kafka
 
