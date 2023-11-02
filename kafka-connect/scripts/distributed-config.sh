@@ -1,10 +1,20 @@
 #!/bin/bash
 
+#---------------------------------------------------------Kafka Connect Bootstrap Server Configuration-----------------------------------------------
+
+
+
 # Check if CONNECT_BOOTSTRAP_SERVERS is set
 if [ -n "$CONNECT_BOOTSTRAP_SERVERS" ]; then
     # Replace bootstrap.servers in connect-distributed.properties with CONNECT_BOOTSTRAP_SERVERS
     sed -i "s|bootstrap.servers=.*|bootstrap.servers=$CONNECT_BOOTSTRAP_SERVERS|g" ${HOME}/config/connect-distributed.properties
 fi
+
+
+
+#---------------------------------------------------------Kafka Connect Converter Configuration-----------------------------------------------
+
+
 
 # Check it VALUE_CONVERTER is set
 if [ -n "$CONNECT_VALUE_CONVERTER" ]; then
@@ -35,6 +45,9 @@ if [ -n "$CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE" ]; then
     # Replace value.converter.schemas.enable in connect-distributed.properties with CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE
     sed -i "s|value.converter.schemas.enable=.*|value.converter.schemas.enable=$CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE|g" ${HOME}/config/connect-distributed.properties
 fi
+
+
+#---------------------------------------------------------Kafka Connect Config, Status, Offset Topic Configuration-----------------------------------------------
 
 # Check if CONNECT_OFFSET_STORAGE_TOPIC is set
 if [ -n "$CONNECT_OFFSET_STORAGE_TOPIC" ]; then
@@ -79,6 +92,25 @@ if [ -n "$CONNECT_OFFSET_FLUSH_INTERVAL_MS" ]; then
 fi
 
 
+#---------------------------------------------------------Kafka Connect Plugin Configuration-----------------------------------------------
+
+
+
+# Add default plugin.path=${HOME}/libs
+sed -i "s|#plugin.path=.*|plugin.path=$HOME/libs|g" ${HOME}/config/connect-distributed.properties
+
+# Check if PLUGIN_PATH is set
+if [ -n "$PLUGIN_PATH" ]; then
+    # Replace plugin.path in connect-distributed.properties with PLUGIN_PATH
+    sed -i "s|plugin.path=.*|plugin.path=$PLUGIN_PATH|g" ${HOME}/config/connect-distributed.properties
+fi
+
+
+
+#---------------------------------------------------------Kafka Connect Rest API Configuration-----------------------------------------------
+
+
+
 # Add default rest.advertised.host.name=$HOSTNAME
 sed -i "s|#rest.advertised.host.name=.*|rest.advertised.host.name=$HOSTNAME|g" ${HOME}/config/connect-distributed.properties
 
@@ -103,26 +135,56 @@ if [ -n "$CONNECT_REST_ADVERTISED_PORT" ]; then
     sed -i "s|rest.advertised.port=.*|rest.advertised.port=$CONNECT_REST_ADVERTISED_PORT|g" ${HOME}/config/connect-distributed.properties
 fi
 
-# Add default rest.advertised.listener=http
-sed -i "s|#rest.advertised.listener=.*|rest.advertised.listener=http|g" ${HOME}/config/connect-distributed.properties
-
-# Check if CONNECT_REST_ADVERTISED_LISTENER is set
-if [ -n "$CONNECT_REST_ADVERTISED_LISTENER" ]; then
-    # Replace rest.advertised.listener in connect-distributed.properties with CONNECT_REST_ADVERTISED_LISTENER
-    sed -i "s|rest.advertised.listener=.*|rest.advertised.listener=$CONNECT_REST_ADVERTISED_LISTENER|g" ${HOME}/config/connect-distributed.properties
-fi
-
 # Check if LISTENERS is set
 if [ -n "$CONNECT_LISTENERS" ]; then
     # Replace listeners in connect-distributed.properties with CONNECT_LISTENERS
     sed -i "s|#listeners=.*|listeners=$CONNECT_LISTENERS|g" ${HOME}/config/connect-distributed.properties
 fi
 
-# Add default plugin.path=${HOME}/libs
-sed -i "s|#plugin.path=.*|plugin.path=$HOME/libs|g" ${HOME}/config/connect-distributed.properties
 
-# Check if PLUGIN_PATH is set
-if [ -n "$PLUGIN_PATH" ]; then
-    # Replace plugin.path in connect-distributed.properties with PLUGIN_PATH
-    sed -i "s|plugin.path=.*|plugin.path=$PLUGIN_PATH|g" ${HOME}/config/connect-distributed.properties
+
+# ---------------------------------------------------------Kafka JAAS Configuration-----------------------------------------------
+
+
+
+echo -e "\n# Kafka JAAS Configuration" >> ${HOME}/config/connect-distributed.properties
+# Check if KAFKA_SASL_MECHANISM is set
+if [ -n "$KAFKA_SASL_MECHANISM" ]; then
+    # Add sasl.mechanism in connect-distributed.properties with KAFKA_SASL_MECHANISM
+    echo "sasl.mechanism=$KAFKA_SASL_MECHANISM" >> ${HOME}/config/connect-distributed.properties
+    # source
+    echo "producer.sasl.mechanism=$KAFKA_SASL_MECHANISM" >> ${HOME}/config/connect-distributed.properties
+    # sink
+    echo "consumer.sasl.mechanism=$KAFKA_SASL_MECHANISM" >> ${HOME}/config/connect-distributed.properties
 fi
+
+# Check if KAFKA_SECURITY_PROTOCOL is set
+if [ -n "$KAFKA_SECURITY_PROTOCOL" ]; then
+    # Add security.protocol in connect-distributed.properties with KAFKA_SECURITY_PROTOCOL
+    echo "security.protocol=$KAFKA_SECURITY_PROTOCOL" >> ${HOME}/config/connect-distributed.properties
+    # source
+    echo "producer.security.protocol=$KAFKA_SECURITY_PROTOCOL" >> ${HOME}/config/connect-distributed.properties
+    # sink
+    echo "consumer.security.protocol=$KAFKA_SECURITY_PROTOCOL" >> ${HOME}/config/connect-distributed.properties
+fi
+
+# Check if KAFKA_SASL_JAAS_CONFIG is set
+if [ -n "$KAFKA_SASL_JAAS_CONFIG" ]; then
+    # Add sasl.jaas.config in connect-distributed.properties with KAFKA_SASL_JAAS_CONFIG
+    echo "sasl.jaas.config=$KAFKA_SASL_JAAS_CONFIG" >> ${HOME}/config/connect-distributed.properties
+    # source
+    echo "producer.sasl.jaas.config=$KAFKA_SASL_JAAS_CONFIG" >> ${HOME}/config/connect-distributed.properties
+    # sink
+    echo "consumer.sasl.jaas.config=$KAFKA_SASL_JAAS_CONFIG" >> ${HOME}/config/connect-distributed.properties
+fi
+
+# Check if KAFKA_SASL_KERBEROS_SERVICE_NAME is set
+if [ -n "$KAFKA_SASL_KERBEROS_SERVICE_NAME" ]; then
+    # Add sasl.kerberos.service.name in connect-distributed.properties with KAFKA_SASL_KERBEROS_SERVICE_NAME
+    echo "sasl.kerberos.service.name=$KAFKA_SASL_KERBEROS_SERVICE_NAME" >> ${HOME}/config/connect-distributed.properties
+fi
+
+
+#---------------------------------------------------------Will Remove later-----------------------------------------------
+
+
