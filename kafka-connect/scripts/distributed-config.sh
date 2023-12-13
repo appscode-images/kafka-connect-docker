@@ -185,6 +185,50 @@ if [ -n "$KAFKA_SASL_KERBEROS_SERVICE_NAME" ]; then
 fi
 
 
+#---------------------------------------------------------Kafka SSL Security-----------------------------------------------
+
+echo -e "\n# Kafka SSL Security\n" >> ${HOME}/config/connect-distributed.properties
+
+# Check if KAFKA_SSL_KEYSTORE_LOCATION is set
+if [ -n "$KAFKA_SSL_KEYSTORE_LOCATION" ]; then
+    # Add ssl.keystore.location in connect-distributed.properties with KAFKA_SSL_KEYSTORE_LOCATION
+    echo "ssl.keystore.location=$KAFKA_SSL_KEYSTORE_LOCATION" >> ${HOME}/config/connect-distributed.properties
+    echo "producer.ssl.keystore.location=$KAFKA_SSL_KEYSTORE_LOCATION" >> ${HOME}/config/connect-distributed.properties
+    echo "consumer.ssl.keystore.location=$KAFKA_SSL_KEYSTORE_LOCATION" >> ${HOME}/config/connect-distributed.properties
+fi
+
+# Check if KAFKA_SSL_KEYSTORE_PASSWORD is set
+if [ -n "$KAFKA_SSL_KEYSTORE_PASSWORD" ]; then
+    # Add ssl.keystore.password in connect-distributed.properties with KAFKA_SSL_KEYSTORE_PASSWORD
+    echo "ssl.keystore.password=$KAFKA_SSL_KEYSTORE_PASSWORD" >> ${HOME}/config/connect-distributed.properties
+    echo "producer.ssl.keystore.password=$KAFKA_SSL_KEYSTORE_PASSWORD" >> ${HOME}/config/connect-distributed.properties
+    echo "consumer.ssl.keystore.password=$KAFKA_SSL_KEYSTORE_PASSWORD" >> ${HOME}/config/connect-distributed.properties
+fi
+
+# Check if KAFKA_SSL_TRUSTSTORE_LOCATION is set
+if [ -n "$KAFKA_SSL_TRUSTSTORE_LOCATION" ]; then
+    # Add ssl.truststore.location in connect-distributed.properties with KAFKA_SSL_TRUSTSTORE_LOCATION
+    echo "ssl.truststore.location=$KAFKA_SSL_TRUSTSTORE_LOCATION" >> ${HOME}/config/connect-distributed.properties
+    echo "producer.ssl.truststore.location=$KAFKA_SSL_TRUSTSTORE_LOCATION" >> ${HOME}/config/connect-distributed.properties
+    echo "consumer.ssl.truststore.location=$KAFKA_SSL_TRUSTSTORE_LOCATION" >> ${HOME}/config/connect-distributed.properties
+fi
+
+# Check if KAFKA_SSL_TRUSTSTORE_PASSWORD is set
+if [ -n "$KAFKA_SSL_TRUSTSTORE_PASSWORD" ]; then
+    # Add ssl.truststore.password in connect-distributed.properties with KAFKA_SSL_TRUSTSTORE_PASSWORD
+    echo "ssl.truststore.password=$KAFKA_SSL_TRUSTSTORE_PASSWORD" >> ${HOME}/config/connect-distributed.properties
+    echo "producer.ssl.truststore.password=$KAFKA_SSL_TRUSTSTORE_PASSWORD" >> ${HOME}/config/connect-distributed.properties
+    echo "consumer.ssl.truststore.password=$KAFKA_SSL_TRUSTSTORE_PASSWORD" >> ${HOME}/config/connect-distributed.properties
+fi
+
+# Check if KAFKA_SSL_KEY_PASSWORD is set
+if [ -n "$KAFKA_SSL_KEY_PASSWORD" ]; then
+    # Add ssl.key.password in connect-distributed.properties with KAFKA_SSL_KEY_PASSWORD
+    echo "ssl.key.password=$KAFKA_SSL_KEY_PASSWORD" >> ${HOME}/config/connect-distributed.properties
+    echo "producer.ssl.key.password=$KAFKA_SSL_KEY_PASSWORD" >> ${HOME}/config/connect-distributed.properties
+    echo "consumer.ssl.key.password=$KAFKA_SSL_KEY_PASSWORD" >> ${HOME}/config/connect-distributed.properties
+fi
+
 #---------------------------------------------------------Will Remove later-----------------------------------------------
 
 
