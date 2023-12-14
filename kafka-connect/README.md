@@ -7,7 +7,7 @@ curl -X POST http://localhost:8083/connectors -H 'Content-Type: application/json
         "config": {
             "connector.class": "com.mongodb.kafka.connect.MongoSourceConnector",
             "tasks.max": 1,
-            "connection.uri": "mongodb://root:Y7UQamKkFosjkjdy@mgo-rs-pods.demo.svc.cluster.local:27017",
+            "connection.uri": mongodb+srv://kafka:connect@kafka.uihvzzi.mongodb.net/,
             "topic.prefix": "mongo",
             "database": "test",
             "collection": "source",
@@ -51,3 +51,27 @@ curl -X POST http://localhost:8083/connectors -H 'Content-Type: application/json
     }
 }'
 ```
+
+curl -X POST -k -u "connect:F6stariFjs*bwknP"  https://172.104.37.95:8083/connectors -H 'Content-Type: application/json' -d '{
+    "name": "my_s3_sink-another",
+    "config": {
+        "connector.class": "io.aiven.kafka.connect.s3.AivenKafkaConnectS3SinkConnector",
+        "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+        "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "value.converter.schemas.enable": false,
+        "format.output.type": "jsonl",
+        "tasks.max": 6,
+        "topics": "mongo.test.source",
+        "aws.access.key.id": "73L9D6A9I8P9HY9I2DIX",
+        "aws.secret.access.key": "gOQgiGqs062CHGziMIUNGERlJhF2WnaCBWCaIJzd",
+        "aws.s3.region": "ap-south-1",
+        "aws.s3.endpoint": "ap-south-1.linodeobjects.com",
+        "file.name.template": "Dec14/{{topic}}-{{partition:padding=true}}-{{start_offset:padding=true}}.gz",
+        "aws.s3.bucket.name": "kafka-connect-0",
+        "format.output.fields": "key,value,offset,timestamp",
+        "format.output.envelope": true,
+        "file.compression.type": "gzip",
+        "timestamp.timezone": "Europe/Berlin",
+        "timestamp.source": "wallclock"
+    }
+}'
